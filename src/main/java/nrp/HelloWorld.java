@@ -1,13 +1,18 @@
 package nrp;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.post;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
+import spark.ModelAndView;
+import spark.template.velocity.VelocityTemplateEngine;
 
 public class HelloWorld {
 	
@@ -20,13 +25,15 @@ public class HelloWorld {
         });
         
         post("/result",  (req, res) -> {
-        	System.out.println(req.params().toString());
+        	System.out.println(req.attributes());
         	return "THIS IS SHIT";
         });
     }
 	
 	private static String getHtml(String path) throws IOException{
-		return readFile(HTML_PATH + path,  Charset.defaultCharset());
+		Map<String, Object> model = new HashMap<>();
+		return  new VelocityTemplateEngine().render(new ModelAndView(model, path));
+		//return readFile(HTML_PATH + path,  Charset.defaultCharset());
 	}
 	
 	private static String readFile(String path, Charset encoding) throws IOException {
