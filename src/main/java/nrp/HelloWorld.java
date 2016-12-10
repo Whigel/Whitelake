@@ -20,7 +20,7 @@ public class HelloWorld {
         });
         
         post("/result",  (req, res) -> {
-        	System.out.println(req.params().toString());
+        	System.out.println(req.params("first"));
         	return "THIS IS SHIT";
         });
     }
