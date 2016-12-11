@@ -20,18 +20,30 @@ public class HelloWorld {
 	
 	public static void main(String[] args) {
         get("/", (req, res) ->{
-        	
-        	return getHtml("Homepage.html");
+        	Map<String, Object> model = new HashMap<>();
+        	return getHtml(model, "Homepage.html");
         });
         
         post("/result",  (req, res) -> {
-        	System.out.println(req.attributes());
-        	return "THIS IS SHIT";
+        	String name = req.queryParams("first") + " " + req.queryParams("last");
+        	String birthday = req.queryParams("birthday");
+        	
+        	int daysLeft = Datumsrechner.tageBisZumGeburtstag(birthday);
+        	
+        	Map<String, Object> model = new HashMap<>();
+        	model.put("daystogo", daysLeft);
+        	model.put("name", name);
+        	
+        	if (daysLeft == 0 ){
+        		return getHtml(model, "HappyBirthday.html");
+        	}
+        	
+        	return getHtml(model, "DaysTogo.html");
         });
     }
 	
-	private static String getHtml(String path) throws IOException{
-		Map<String, Object> model = new HashMap<>();
+	private static String getHtml(Map<String, Object>  model, String path) throws IOException{
+		
 		return  new VelocityTemplateEngine().render(new ModelAndView(model, path));
 		//return readFile(HTML_PATH + path,  Charset.defaultCharset());
 	}
