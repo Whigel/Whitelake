@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
@@ -18,10 +19,33 @@ public class HelloWorld {
 	
 	public static final String HTML_PATH = "src"+File.separator+"main"+File.separator+"resources"+File.separator;
 	
+	
+	//TODO: think about a machine learn approach that the mashine learnes key factores.
+	
 	public static void main(String[] args) {
         get("/", (req, res) ->{
         	Map<String, Object> model = new HashMap<>();
         	return getHtml(model, "Homepage.html");
+        });
+        
+        get("/match", (req, res) ->{
+        	Set<String> params = req.queryParams();
+        	if(params.contains("home") && params.contains("against")){
+        		return req.queryParams("home") + " vs " + req.queryParams("against");
+        		
+        		//TODO: crawl soccer statistics
+        		
+        		//TODO: crawl top rate
+        		
+        		//TODO: create Team objects with the crawled data
+        		
+        		//TODO: calculate score
+        		
+        		//TODO: write scores into file/database 
+        		
+        		
+        	}
+        	return "Ups some parameter is missing";
         });
         
         post("/result",  (req, res) -> {
