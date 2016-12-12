@@ -3,8 +3,12 @@ package nrp;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,8 +23,9 @@ public class HelloWorld {
 	
 	public static final String HTML_PATH = "src"+File.separator+"main"+File.separator+"resources"+File.separator;
 	
+	private static final String USER_AGENT = "Mozilla/5.0";
 	
-	//TODO: think about a machine learn approach that the mashine learnes key factores.
+	//TODO: think about a machine learn approach that the machin learnes key factores. Clustering e.g. Convert Teams into Vectors vectors will point in serten direction
 	
 	public static void main(String[] args) {
         get("/", (req, res) ->{
@@ -30,12 +35,16 @@ public class HelloWorld {
         
         get("/match", (req, res) ->{
         	Set<String> params = req.queryParams();
-        	if(params.contains("home") && params.contains("against")){
-        		return req.queryParams("home") + " vs " + req.queryParams("against");
-        		
+        	//if(params.contains("home") && params.contains("against")){
+        		//return req.queryParams("home") + " vs " + req.queryParams("against");
+        	
+        		//TODO: Create Team & leauge enums in HashMap
+        	
+        		int teamId = 21;
+        		return HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamId);
         		//TODO: crawl soccer statistics
         		
-        		//TODO: crawl top rate
+        		//TODO: crawl tip rate
         		
         		//TODO: create Team objects with the crawled data
         		
@@ -44,8 +53,8 @@ public class HelloWorld {
         		//TODO: write scores into file/database 
         		
         		
-        	}
-        	return "Ups some parameter is missing";
+        	//}
+        	//return "Ups some parameter is missing";
         });
         
         post("/result",  (req, res) -> {
@@ -66,6 +75,8 @@ public class HelloWorld {
         });
     }
 	
+	
+
 	private static String getHtml(Map<String, Object>  model, String path) throws IOException{
 		
 		return  new VelocityTemplateEngine().render(new ModelAndView(model, path));
