@@ -1,14 +1,11 @@
 package nrp;
 
+import static jodd.lagarto.dom.jerry.Jerry.jerry;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import jodd.lagarto.dom.jerry.Jerry;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
@@ -40,8 +38,12 @@ public class HelloWorld {
         	
         		//TODO: Create Team & leauge enums in HashMap
         	
-        		int teamId = 21;
-        		return HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamId);
+        		int teamId = 21; //21 is Schalke in Germany
+        		String html = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamId);
+        		
+        		Jerry jerry = jerry(html);
+        		
+        		System.out.print(jerry.$("td:nth-child(2) b"));
         		//TODO: crawl soccer statistics
         		
         		//TODO: crawl tip rate
@@ -52,7 +54,7 @@ public class HelloWorld {
         		
         		//TODO: write scores into file/database 
         		
-        		
+        		return html;
         	//}
         	//return "Ups some parameter is missing";
         });
