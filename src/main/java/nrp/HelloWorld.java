@@ -33,14 +33,14 @@ public class HelloWorld {
         
         get("/match", (req, res) ->{
         	Set<String> params = req.queryParams();
-        	//if(params.contains("home") && params.contains("against")){
-        		//return req.queryParams("home") + " vs " + req.queryParams("against");
+        	//if(params.contains("home") && params.contains("away")){
+        		//return req.queryParams("home") + " vs " + req.queryParams("away");
         	
         		//TODO: Create Team & leauge enums in HashMap
         	
-        		int teamHomeId = 21; //21 is Schalke in Germany
+        		int teamHomeId = 23; //21 is Schalke in Germany
         		
-        		int teamAwayId = 20; //21 is Schalke in Germany
+        		int teamAwayId = 23; //21 is Schalke in Germany
         		
         		//TODO: crawl soccer statistics
         		

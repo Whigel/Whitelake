@@ -23,6 +23,8 @@
   </script>   
 </head>
 <body>
-  $home.getTeamName() vs $away.getTeamName() : $score      
+  $home.getTeamName() vs $away.getTeamName() : $score  <br>
+  #set( $score = $home.calculateHomeScore($away))
+  $home.getTeamName() will score $score goals.
 </body>
 </html>
