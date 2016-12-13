@@ -38,24 +38,34 @@ public class HelloWorld {
         	
         		//TODO: Create Team & leauge enums in HashMap
         	
-        		int teamId = 21; //21 is Schalke in Germany
+        		int teamHomeId = 21; //21 is Schalke in Germany
         		
-        		String html = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamId);
+        		int teamAwayId = 20; //21 is Schalke in Germany
         		
-        		Jerry jerry = jerry(html);
-        		
-        		System.out.print(jerry.$("td:nth-child(2) b"));
         		//TODO: crawl soccer statistics
         		
+        		String htmlHome = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamHomeId);
+        		
+        		String htmlAway = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamAwayId);
         		//TODO: crawl tip rate
         		
         		//TODO: create Team objects with the crawled data
         		
+        		Team home = Team.createTeamFromHtml(htmlHome);
+        		
+        		Team away = Team.createTeamFromHtml(htmlAway);
+        		
         		//TODO: calculate score
         		
-        		//TODO: write scores into file/database 
+        		MatchCalculator match = new MatchCalculator();
+        		Float score = match.calculateScore(home, away);
         		
-        		return html;
+        		//TODO: write scores into file/database 
+        		Map<String, Object> model = new HashMap<>();
+            	model.put("home", home);
+            	model.put("away", away);
+            	model.put("score", score);
+            	return getHtml(model, "MatchStatistics.html");
         	//}
         	//return "Ups some parameter is missing";
         });
@@ -65,19 +75,10 @@ public class HelloWorld {
         	String teamId = req.queryParams("team");
         	String html = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamId);
     		
-        	Jerry jerry = jerry(html);
-        	
-        	String teamName = jerry.$("#content div div table tr h1").html();
-    		
-    		String wins = jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(2) font b").html();
-    		String draws = jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(3) font b").html();
-    		String losses = jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(4) font b").html();
-    		
+        	Team team = Team.createTeamFromHtml(html);
+        	System.out.println(team.getTeamName());
         	Map<String, Object> model = new HashMap<>();
-        	model.put("wins", wins);
-        	model.put("draws", draws);
-        	model.put("losses", losses);
-        	model.put("teamName", teamName);
+        	model.put("team", team);
         	
         	return getHtml(model, "TeamStatistics.html");
         });
