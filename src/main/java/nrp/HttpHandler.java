@@ -51,25 +51,22 @@ public class HttpHandler {
 	public static void main(String... args){
 		try {
 			for (int teamId = 10; teamId < 20; teamId++){
+				
+				
 				String html = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamId);
 	    		
 				//System.out.println(html);
 	    		
 	    		Jerry jerry = jerry(html);
 	    		String teamName = jerry.$("#content div div table tr h1").html();
-	    		//String div = jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(3) font b").html();
-	    		//System.out.println(div);
+	    		
 	    		String wins = jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(2) font b").html();
 	    		String draw = jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(3) font b").html();
 	    		String loss = jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(4) font b").html();
 	    		
 	    		System.out.println(teamName + " statistics: "+wins+"|"+draw+"|"+loss);
-	    		//Pattern patter = Pattern.compile("<b>[0-9]*</b>");
-	    		//pattern.
-	    		//System.out.println(jerry.$("html , body , #container , #contest , div , div , div , table , tbody , tr , td , font , b").html());
-				Document doc = Jsoup.connect("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamId).get();
-				Elements bold = doc.select("#content");
-				System.out.println(bold.size());
+	  
+				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
