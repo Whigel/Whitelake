@@ -1,6 +1,5 @@
 package nrp;
 
-import static jodd.lagarto.dom.jerry.Jerry.jerry;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -10,10 +9,21 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jodd.lagarto.dom.jerry.Jerry;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
@@ -26,6 +36,21 @@ public class HelloWorld {
 	//TODO: think about a machine learn approach that the machin learnes key factores. Clustering e.g. Convert Teams into Vectors vectors will point in serten direction
 	
 	public static void main(String[] args) {
+		
+		/*NodeList nodes = null;
+    	try{
+    	Document doc = getXMLDoc("Teams.xml");
+    	nodes = doc.getElementsByTagName("team");
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	List<Node> nodes2 = new LinkedList<Node>();
+    	for(int i = 0; i<nodes.getLength(); i++){
+    		String name = ((Element)nodes.item(0)).getElementsByTagName("name").item(0).getTextContent());
+    		nodes2.add(nodes.item(0));
+    	}*/
+    	
         get("/", (req, res) ->{
         	Map<String, Object> model = new HashMap<>();
         	return getHtml(model, "Homepage.html");
@@ -33,20 +58,22 @@ public class HelloWorld {
         
         get("/match", (req, res) ->{
         	Set<String> params = req.queryParams();
-        	//if(params.contains("home") && params.contains("away")){
+        	if(params.contains("home") && params.contains("away")){
         		//return req.queryParams("home") + " vs " + req.queryParams("away");
         	
         		//TODO: Create Team & leauge enums in HashMap
-        	
-        		int teamHomeId = 23; //21 is Schalke in Germany
+        		int awayId = Integer.parseInt(req.queryParams("away")); 
+        		int homeId = Integer.parseInt(req.queryParams("home")); 
+        		
+        		int teamHomeId = 21; //21 is Schalke in Germany
         		
         		int teamAwayId = 23; //21 is Schalke in Germany
         		
         		//TODO: crawl soccer statistics
         		
-        		String htmlHome = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamHomeId);
+        		String htmlHome = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+homeId);
         		
-        		String htmlAway = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+teamAwayId);
+        		String htmlAway = HttpHandler.sendGet("http://www.soccerstats.com/team.asp?league=germany&teamid="+awayId);
         		//TODO: crawl tip rate
         		
         		//TODO: create Team objects with the crawled data
@@ -66,8 +93,29 @@ public class HelloWorld {
             	model.put("away", away);
             	model.put("score", score);
             	return getHtml(model, "MatchStatistics.html");
-        	//}
-        	//return "Ups some parameter is missing";
+        	}
+        	return "Ups some parameter is missing";
+        });
+        
+        get("/teams", (req, res)->{
+        	
+        	NodeList nodes = null;
+        	try{
+	        	Document doc = getXMLDoc("Teams.xml");
+	        	nodes = doc.getElementsByTagName("team");
+        	}catch (Exception e) {
+				e.printStackTrace();
+			}
+        	
+        	Map<String, Object> model = new HashMap<>();
+        	List<Element> nodes2 = new LinkedList<Element>();
+        	for(int i = 0; i<nodes.getLength(); i++){
+        		Element element = ((Element)nodes.item(i));//.getElementsByTagName("name").item(0).getTextContent());
+        		nodes2.add(element);
+        	}
+        	model.put("nodes", nodes2);
+        	
+        	return getHtml(model, "Teams.html");
         });
         
         get("/teamstats", (req, res)->{
@@ -102,6 +150,17 @@ public class HelloWorld {
     }
 	
 	
+
+	private static Document getXMLDoc(String path) throws ParserConfigurationException, SAXException, IOException {
+		File inputFile = new File(HTML_PATH+path);
+        DocumentBuilderFactory dbFactory 
+           = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        return dBuilder.parse(inputFile);
+        
+	}
+
+
 
 	private static String getHtml(Map<String, Object>  model, String path) throws IOException{
 		

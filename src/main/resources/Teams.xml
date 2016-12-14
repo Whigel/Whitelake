@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+	<team>
+		<name>Schalke 04</name>
+		<id>21</id>
+	</team>
+	<team>
+		<name>Bayern München</name>
+		<id>23</id>
+	</team>
+	<team>
+		<name>RB Leipzig</name>
+		<id>30</id>
+	</team>
+	<team>
+		<name>Hertha Berlin</name>
+		<id>20</id>
+	</team>
+	<team>
+		<name>Hoffenheim</name>
+		<id>19</id>
+	</team>
+	<team>
+		<name>Frankfurt</name>
+		<id>27</id>
+	</team>
+	<team>
+		<name>Dortmund</name>
+		<id>13</id>
+	</team>
+	<team>
+		<name>FC Köln</name>
+		<id>17</id>
+	</team>
+</class>

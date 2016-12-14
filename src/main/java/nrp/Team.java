@@ -43,7 +43,7 @@ public class Team {
 		
     	System.out.println(teamName);
     	try{
-    	System.out.println(jerry.$("#content div div.row div.five.columns table:nth-child(11) tr:nth-child(2) td:nth-child(2) ").html());
+    	System.out.println(jerry.$("#content div div.row div.five.columns table:nth-child(11) ").html());
 		int wonHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(2) td:nth-child(2) ").html());
 		int lostHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(2) td:nth-child(3) ").html());
 		int drawHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(2) td:nth-child(4) ").html());
