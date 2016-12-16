@@ -2,14 +2,17 @@ package nrp;
 
 import static jodd.lagarto.dom.jerry.Jerry.jerry;
 
+import java.io.StringWriter;
 import java.util.List;
+
+import org.python.util.PythonInterpreter;
 
 import jodd.lagarto.dom.jerry.Jerry;
 
 public class Team {
 	
 	
-	//TODO: add all relevant infos about teams
+	private static final int LAST_GAMES_COUNT = 5;
 	public List<Boolean> lastFiveMatches;
 	
 	private String teamName;
@@ -25,9 +28,9 @@ public class Team {
 	private int concededAway;
 	private int scoredHome;
 	private int scoredAway;
-	private int gamesPlayed;
-	
-	
+	private int gamesPlayedHome;
+	private int gamesPlayedAway;
+		
 	public Team(String teamName){
 		this.teamName = teamName;
 	}
@@ -43,7 +46,7 @@ public class Team {
 		
     	System.out.println(teamName);
     	try{
-    	System.out.println(jerry.$("#content div div.row div.five.columns table:nth-child(11) ").html());
+    	//System.out.println(jerry.$("#content div div.row div.five.columns table:nth-child(11) ").html());
 		int wonHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(2) td:nth-child(2) ").html());
 		int lostHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(2) td:nth-child(3) ").html());
 		int drawHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(2) td:nth-child(4) ").html());
@@ -58,8 +61,20 @@ public class Team {
 		int concededHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table:nth-child(11) tr:nth-child(3) td:nth-child(2) ").html());
 		int concededAway = Integer.parseInt(jerry.$("#content div div.row div.five.columns table:nth-child(11) tr:nth-child(3) td:nth-child(3) ").html());
 		
-		int gamesPlayed = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(4) td:nth-child(5) b").html());
+		int gamesPlayedHome = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(2) td:nth-child(5) b").html());
+		int gamesPlayedAway = Integer.parseInt(jerry.$("#content div div.row div.five.columns table tr:nth-child(3) td:nth-child(5) b").html());
 		
+		//TODO: Crawl all Matches all goals 
+		for(int i = 3; i < 3+LAST_GAMES_COUNT; i++){
+			System.out.println(jerry.$("#content div div.row div:nth-child(1) tr:nth-child("+i+") td:nth-child(3) b").html());
+		}
+		
+		
+		
+		
+		
+		
+		//List<String> games = getGamesFromHtml(jerry);
 		Team team = new Team(teamName);
 		team.setDrawAway(drawAway);
 		team.setDrawHome(drawHome);
@@ -71,22 +86,40 @@ public class Team {
 		team.setConcededHome(concededHome);
 		team.setScoredAway(scoredAway);
 		team.setScoredHome(scoredHome);
-		team.setGamesPlayed(gamesPlayed);
+		team.setGamesPlayedHome(gamesPlayedHome);
+		team.setGamesPlayedAway(gamesPlayedAway);
 		
 		team.setPointsAway(3 * wonAway + drawAway);
 		team.setPointsHome(3 * wonHome + drawHome);
 		return team;
     	}
     	catch (Exception e) {
-			e.printStackTrace();// TODO: handle exception
+			e.printStackTrace();
 		}
     	return null;
 	}
 	
-	public float calculateHomeScore(Team away){
-		return (this.scoredHome / 14f )* (away.concededAway / 14f);
+	private static List<String> getGamesFromHtml(Jerry jerry) {
+		int i = 1;
+		while(true){
+			
+			System.out.println(jerry.$("#content div div.row div.seven.columns").html());
+			i++;
+			if(i>100) break;
+		}
+		return null;
 	}
 
+	public float calculateHomeScore(Team away){
+		//System.out.println(this.scoredHome +"/"+(float) this.gamesPlayedHome + "*" +"("+away.getConcededAway() +"/" +(float) away.getGamesPlayedAway());
+		return (this.scoredHome /(float) this.gamesPlayedHome ) * (away.getConcededAway() /(float) away.getGamesPlayedAway());
+	}
+	
+	public float calculateAwayScore(Team home){
+		//System.out.println(this.scoredHome +"/"+(float) this.gamesPlayedHome + "*" +"("+away.getConcededAway() +"/" +(float) away.getGamesPlayedAway());
+		return (this.getScoredAway() /(float) this.getGamesPlayedAway() ) * (home.getConcededHome() /(float) home.getGamesPlayedHome());
+	}
+	
 	public String getTeamName() {
 		return teamName;
 	}
@@ -216,16 +249,34 @@ public class Team {
 		this.scoredAway = scoredAway;
 	}
 
-
-	public int getGamesPlayed() {
-		return gamesPlayed;
+	public int getGamesPlayedAway() {
+		return gamesPlayedAway;
 	}
 
 
-	public void setGamesPlayed(int gamesPlayed) {
-		this.gamesPlayed = gamesPlayed;
+	public void setGamesPlayedAway(int gamesPlayedAway) {
+		this.gamesPlayedAway = gamesPlayedAway;
 	}
-	
+
+
+	public List<Boolean> getLastFiveMatches() {
+		return lastFiveMatches;
+	}
+
+
+	public void setLastFiveMatches(List<Boolean> lastFiveMatches) {
+		this.lastFiveMatches = lastFiveMatches;
+	}
+
+
+	public int getGamesPlayedHome() {
+		return gamesPlayedHome;
+	}
+
+
+	public void setGamesPlayedHome(int gamesPlayedHome) {
+		this.gamesPlayedHome = gamesPlayedHome;
+	}
 	
 
 }

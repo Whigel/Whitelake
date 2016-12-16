@@ -32,4 +32,8 @@
 		<name>FC Köln</name>
 		<id>17</id>
 	</team>
+	<team>
+		<name>Darmstadt</name>
+		<id>28</id>
+	</team>
 </class>
