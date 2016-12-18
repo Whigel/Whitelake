@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from math import calcMarkovInv
+from math import calcMarkovInv, crawlTeams
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^math/', calcMarkovInv)
+    url(r'^math/', calcMarkovInv),
+    url(r'^crawlTeams/', crawlTeams)
 ]

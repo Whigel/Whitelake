@@ -36,4 +36,12 @@
 		<name>Darmstadt</name>
 		<id>28</id>
 	</team>
+	<team>
+		<name>Ingolstadt</name>
+		<id>29</id>
+	</team>
+	<team>
+		<name>Leverkusen</name>
+		<id>26</id>
+	</team>
 </class>
